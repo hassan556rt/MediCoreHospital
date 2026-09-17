@@ -1,63 +1,53 @@
 # MediCore Hospital Management System
 
-A professional WPF-based hospital management system for Arabic-speaking users, built with C# .NET 8, MVVM, ADO.NET, and SQL Server.
-
 ## Overview
 
-MediCore is a production-oriented Windows desktop application designed for private hospitals. It provides modules for patient management, appointments, billing, pharmacy, lab, radiology, emergency, admissions, HR, reports, security, and settings.
+MediCore is a professional Arabic-first Windows desktop hospital management system built with C#, WPF, MVVM, ADO.NET, and SQL Server.
 
-## Stack
+## Goal
 
-- C#
-- .NET 8 WPF
-- XAML
-- MVVM (CommunityToolkit.Mvvm)
-- ADO.NET
-- SQL Server
-- Dependency Injection
-- Serilog-style logging abstraction
+The project is designed to support private hospital operations such as patient management, appointments, billing, pharmacy, lab, radiology, surgeries, emergency, nursing, HR, audit logs, backup, and reporting.
 
-## Project structure
+## Solution structure
 
-- `MediCoreHospital.UI` – WPF application and Arabic RTL interface
-- `MediCoreHospital.Application` – services, DTOs, validators, contracts
-- `MediCoreHospital.Domain` – business entities and enums
-- `MediCoreHospital.Infrastructure` – database access, security, settings
+- `MediCoreHospital.UI` – WPF application and Arabic RTL front-end
+- `MediCoreHospital.Application` – DTOs, contracts, business service interfaces
+- `MediCoreHospital.Domain` – core entities and enums
+- `MediCoreHospital.Infrastructure` – ADO.NET, SQL factory, authentication service
 - `MediCoreHospital.Database` – SQL scripts and seed data
-- `MediCoreHospital.Tests` – basic tests
+- `MediCoreHospital.Tests` – unit tests
 
-## Run locally
+## Prerequisites
 
-Prerequisites:
-
-- Visual Studio 2022 or VS Code with C# Dev Kit
 - .NET 8 SDK
-- SQL Server 2019+ or SQL Server LocalDB
+- SQL Server 2019 or later
+- Visual Studio 2022 or VS Code with C# Dev Kit
 
-Commands:
+## Setup
 
 ```bash
 dotnet restore
 dotnet build
-cd MediCoreHospital.UI
-dotnet run
 ```
 
-## Database setup
+## Database
 
-1. Open SQL Server Management Studio.
-2. Execute the scripts in the `MediCoreHospital.Database/Sql/` folder in order.
-3. Update the connection string in `appsettings.json` if needed.
+Execute the SQL scripts in this order:
 
-## Demo access
+1. `MediCoreHospital.Database/Sql/01_CreateDatabase.sql`
+2. `MediCoreHospital.Database/Sql/02_CreateTables.sql`
+3. `MediCoreHospital.Database/Sql/03_CreateSeedData.sql`
+4. `MediCoreHospital.Database/Sql/09_CreateAdmin.sql`
 
-The project includes a seeded administrator account for demonstration:
+Update the connection string in `MediCoreHospital.UI/appsettings.json` if needed.
+
+## Demo login
 
 - Username: `admin`
 - Password: `Admin@123`
 
-> Note: The application is designed for an Arabic-first hospital workflow and includes RTL support by default.
+> The default demo password must be initialized securely in production. This project uses modern BCrypt-based password verification patterns in the infrastructure layer.
 
 ## Notes
 
-This is a clean architectural foundation and enterprise-style starter for a real hospital management platform. It includes a professional Arabic WPF shell, dashboard structure, patient module, and database design skeleton for further expansion.
+This repository contains the Phase 1 foundation: solution scaffolding, project references, Arabic RTL login UI, database schema starter, and architecture needed for the next phases of the hospital management system.

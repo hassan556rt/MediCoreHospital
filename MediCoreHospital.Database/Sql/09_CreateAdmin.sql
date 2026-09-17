@@ -1,0 +1,7 @@
+CREATE TABLE DemoAdminHash (
+    Value NVARCHAR(255) NOT NULL
+);
+GO
+
+INSERT INTO DemoAdminHash (Value) VALUES ('$2a$12$8XQ4vX9bYzZDd5u2o9E0N.lk7KxNN6gP3CjheYffnM7l0QmKonW8i');
+GO
