@@ -3,6 +3,7 @@ using MediCoreHospital.Infrastructure.Configuration;
 using MediCoreHospital.Infrastructure.Data;
 using MediCoreHospital.Infrastructure.Services;
 using MediCoreHospital.UI.ViewModels.Appointments;
+using MediCoreHospital.UI.ViewModels.Billing;
 using MediCoreHospital.UI.ViewModels.Clinical;
 using MediCoreHospital.UI.ViewModels.Dashboard;
 using MediCoreHospital.UI.ViewModels.Inpatient;
@@ -16,14 +17,36 @@ namespace MediCoreHospital.UI;
 public partial class App : System.Windows.Application
 {
     public IServiceProvider Services { get; private set; } = null!;
+
     private void Application_Startup(object sender, System.Windows.StartupEventArgs e)
     {
-        var configuration = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json", false, true).Build();
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(AppContext.BaseDirectory)
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .Build();
+
         var services = new ServiceCollection();
-        services.AddSingleton<IConfiguration>(configuration).AddSingleton<AppConfiguration>().AddSingleton<ISqlConnectionFactory, SqlConnectionFactory>();
+        services.AddSingleton<IConfiguration>(configuration);
+        services.AddSingleton<AppConfiguration>();
+        services.AddSingleton<ISqlConnectionFactory, SqlConnectionFactory>();
         services.AddLogging(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Information));
-        services.AddScoped<IAuthenticationService, AuthenticationService>().AddScoped<IDashboardService, DashboardService>().AddScoped<IPatientService, PatientService>().AddScoped<IClinicalDirectoryService, ClinicalDirectoryService>().AddScoped<IAppointmentService, AppointmentService>().AddScoped<IInpatientService, InpatientService>();
-        services.AddTransient<DashboardViewModel>().AddTransient<PatientsViewModel>().AddTransient<ClinicalDirectoryViewModel>().AddTransient<AppointmentsViewModel>().AddTransient<InpatientViewModel>().AddTransient<MainWindow>();
+
+        services.AddScoped<IAuthenticationService, AuthenticationService>();
+        services.AddScoped<IDashboardService, DashboardService>();
+        services.AddScoped<IPatientService, PatientService>();
+        services.AddScoped<IClinicalDirectoryService, ClinicalDirectoryService>();
+        services.AddScoped<IAppointmentService, AppointmentService>();
+        services.AddScoped<IInpatientService, InpatientService>();
+        services.AddScoped<IInvoiceService, InvoiceService>();
+
+        services.AddTransient<DashboardViewModel>();
+        services.AddTransient<PatientsViewModel>();
+        services.AddTransient<ClinicalDirectoryViewModel>();
+        services.AddTransient<AppointmentsViewModel>();
+        services.AddTransient<InpatientViewModel>();
+        services.AddTransient<BillingViewModel>();
+        services.AddTransient<MainWindow>();
+
         Services = services.BuildServiceProvider();
         Services.GetRequiredService<MainWindow>().Show();
     }
