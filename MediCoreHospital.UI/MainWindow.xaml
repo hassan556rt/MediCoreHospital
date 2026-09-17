@@ -1,7 +1,6 @@
 <Window x:Class="MediCoreHospital.UI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:dashboard="clr-namespace:MediCoreHospital.UI.Views.Dashboard"
         Title="MediCore | نظام إدارة المستشفى"
         Width="1366"
         Height="768"
@@ -10,6 +9,6 @@
         FontFamily="Cairo, Segoe UI, Arial"
         Background="#F7F9FC">
     <Grid>
-        <dashboard:DashboardView />
+        <ContentControl x:Name="ContentHost" />
     </Grid>
 </Window>

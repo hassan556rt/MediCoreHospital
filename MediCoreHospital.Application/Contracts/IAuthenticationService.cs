@@ -1,3 +1,5 @@
+using MediCoreHospital.Application.DTOs;
+
 namespace MediCoreHospital.Application.Contracts;
 
 public interface IAuthenticationService

@@ -1,7 +1,9 @@
 using System.Windows;
+using MediCoreHospital.Application.Contracts;
 using MediCoreHospital.Infrastructure.Configuration;
 using MediCoreHospital.Infrastructure.Data;
 using MediCoreHospital.Infrastructure.Services;
+using MediCoreHospital.UI.ViewModels.Dashboard;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -20,7 +22,6 @@ public partial class App : Application
             .Build();
 
         var services = new ServiceCollection();
-
         services.AddSingleton<IConfiguration>(configuration);
         services.AddSingleton<AppConfiguration>();
         services.AddSingleton<ISqlConnectionFactory, SqlConnectionFactory>();
@@ -31,10 +32,11 @@ public partial class App : Application
         });
 
         services.AddScoped<IAuthenticationService, AuthenticationService>();
+        services.AddScoped<IDashboardService, DashboardService>();
+        services.AddTransient<DashboardViewModel>();
+        services.AddTransient<MainWindow>();
 
         Services = services.BuildServiceProvider();
-
-        var mainWindow = new MainWindow();
-        mainWindow.Show();
+        Services.GetRequiredService<MainWindow>().Show();
     }
 }
