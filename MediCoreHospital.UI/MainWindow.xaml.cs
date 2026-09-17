@@ -2,6 +2,7 @@ using System.Windows;
 using MediCoreHospital.UI.Views.Appointments;
 using MediCoreHospital.UI.Views.Clinical;
 using MediCoreHospital.UI.Views.Dashboard;
+using MediCoreHospital.UI.Views.Inpatient;
 using MediCoreHospital.UI.Views.Patients;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,12 +15,13 @@ public partial class MainWindow : Window
     {
         if (sender is FrameworkElement element && element.Tag is string page)
         {
-            switch (page) { case "Patients": ShowPatients(); break; case "Clinical": ShowClinical(); break; case "Appointments": ShowAppointments(); break; default: ShowDashboard(); break; }
+            switch (page) { case "Patients": ShowPatients(); break; case "Clinical": ShowClinical(); break; case "Appointments": ShowAppointments(); break; case "Inpatient": ShowInpatient(); break; default: ShowDashboard(); break; }
         }
     }
     private void ShowDashboard() => ContentHost.Content = new DashboardView(((App)Application.Current).Services.GetRequiredService<ViewModels.Dashboard.DashboardViewModel>());
     private void ShowPatients() => ContentHost.Content = new PatientsView(((App)Application.Current).Services.GetRequiredService<ViewModels.Patients.PatientsViewModel>());
     private void ShowClinical() => ContentHost.Content = new ClinicalDirectoryView(((App)Application.Current).Services.GetRequiredService<ViewModels.Clinical.ClinicalDirectoryViewModel>());
     private void ShowAppointments() => ContentHost.Content = new AppointmentsView(((App)Application.Current).Services.GetRequiredService<ViewModels.Appointments.AppointmentsViewModel>());
+    private void ShowInpatient() => ContentHost.Content = new InpatientView(((App)Application.Current).Services.GetRequiredService<ViewModels.Inpatient.InpatientViewModel>());
     private void Logout_Click(object sender, RoutedEventArgs e) => Close();
 }

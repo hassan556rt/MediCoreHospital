@@ -5,6 +5,7 @@ using MediCoreHospital.Infrastructure.Services;
 using MediCoreHospital.UI.ViewModels.Appointments;
 using MediCoreHospital.UI.ViewModels.Clinical;
 using MediCoreHospital.UI.ViewModels.Dashboard;
+using MediCoreHospital.UI.ViewModels.Inpatient;
 using MediCoreHospital.UI.ViewModels.Patients;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,8 +22,8 @@ public partial class App : System.Windows.Application
         var services = new ServiceCollection();
         services.AddSingleton<IConfiguration>(configuration).AddSingleton<AppConfiguration>().AddSingleton<ISqlConnectionFactory, SqlConnectionFactory>();
         services.AddLogging(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Information));
-        services.AddScoped<IAuthenticationService, AuthenticationService>().AddScoped<IDashboardService, DashboardService>().AddScoped<IPatientService, PatientService>().AddScoped<IClinicalDirectoryService, ClinicalDirectoryService>().AddScoped<IAppointmentService, AppointmentService>();
-        services.AddTransient<DashboardViewModel>().AddTransient<PatientsViewModel>().AddTransient<ClinicalDirectoryViewModel>().AddTransient<AppointmentsViewModel>().AddTransient<MainWindow>();
+        services.AddScoped<IAuthenticationService, AuthenticationService>().AddScoped<IDashboardService, DashboardService>().AddScoped<IPatientService, PatientService>().AddScoped<IClinicalDirectoryService, ClinicalDirectoryService>().AddScoped<IAppointmentService, AppointmentService>().AddScoped<IInpatientService, InpatientService>();
+        services.AddTransient<DashboardViewModel>().AddTransient<PatientsViewModel>().AddTransient<ClinicalDirectoryViewModel>().AddTransient<AppointmentsViewModel>().AddTransient<InpatientViewModel>().AddTransient<MainWindow>();
         Services = services.BuildServiceProvider();
         Services.GetRequiredService<MainWindow>().Show();
     }
