@@ -5,6 +5,7 @@ using MediCoreHospital.UI.Views.Clinical;
 using MediCoreHospital.UI.Views.Dashboard;
 using MediCoreHospital.UI.Views.Inpatient;
 using MediCoreHospital.UI.Views.Patients;
+using MediCoreHospital.UI.Views.Pharmacy;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MediCoreHospital.UI;
@@ -23,24 +24,13 @@ public partial class MainWindow : Window
         {
             switch (page)
             {
-                case "Patients":
-                    ShowPatients();
-                    break;
-                case "Clinical":
-                    ShowClinical();
-                    break;
-                case "Appointments":
-                    ShowAppointments();
-                    break;
-                case "Inpatient":
-                    ShowInpatient();
-                    break;
-                case "Billing":
-                    ShowBilling();
-                    break;
-                default:
-                    ShowDashboard();
-                    break;
+                case "Patients": ShowPatients(); break;
+                case "Clinical": ShowClinical(); break;
+                case "Appointments": ShowAppointments(); break;
+                case "Inpatient": ShowInpatient(); break;
+                case "Billing": ShowBilling(); break;
+                case "Pharmacy": ShowPharmacy(); break;
+                default: ShowDashboard(); break;
             }
         }
     }
@@ -51,5 +41,6 @@ public partial class MainWindow : Window
     private void ShowAppointments() => ContentHost.Content = new AppointmentsView(((App)Application.Current).Services.GetRequiredService<ViewModels.Appointments.AppointmentsViewModel>());
     private void ShowInpatient() => ContentHost.Content = new InpatientView(((App)Application.Current).Services.GetRequiredService<ViewModels.Inpatient.InpatientViewModel>());
     private void ShowBilling() => ContentHost.Content = new BillingView(((App)Application.Current).Services.GetRequiredService<ViewModels.Billing.BillingViewModel>());
+    private void ShowPharmacy() => ContentHost.Content = new PharmacyView(((App)Application.Current).Services.GetRequiredService<ViewModels.Pharmacy.PharmacyViewModel>());
     private void Logout_Click(object sender, RoutedEventArgs e) => Close();
 }

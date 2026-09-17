@@ -8,6 +8,7 @@ using MediCoreHospital.UI.ViewModels.Clinical;
 using MediCoreHospital.UI.ViewModels.Dashboard;
 using MediCoreHospital.UI.ViewModels.Inpatient;
 using MediCoreHospital.UI.ViewModels.Patients;
+using MediCoreHospital.UI.ViewModels.Pharmacy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -38,6 +39,7 @@ public partial class App : System.Windows.Application
         services.AddScoped<IAppointmentService, AppointmentService>();
         services.AddScoped<IInpatientService, InpatientService>();
         services.AddScoped<IInvoiceService, InvoiceService>();
+        services.AddScoped<IPharmacyService, PharmacyService>();
 
         services.AddTransient<DashboardViewModel>();
         services.AddTransient<PatientsViewModel>();
@@ -45,6 +47,7 @@ public partial class App : System.Windows.Application
         services.AddTransient<AppointmentsViewModel>();
         services.AddTransient<InpatientViewModel>();
         services.AddTransient<BillingViewModel>();
+        services.AddTransient<PharmacyViewModel>();
         services.AddTransient<MainWindow>();
 
         Services = services.BuildServiceProvider();

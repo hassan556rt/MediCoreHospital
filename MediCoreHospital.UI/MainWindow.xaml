@@ -27,9 +27,10 @@
                     <Button Content="المواعيد" Tag="Appointments" Click="Navigation_Click" Margin="0,4" Padding="12" Background="Transparent" Foreground="White" BorderThickness="0"/>
                     <Button Content="التنويم" Tag="Inpatient" Click="Navigation_Click" Margin="0,4" Padding="12" Background="Transparent" Foreground="White" BorderThickness="0"/>
                     <Button Content="الفواتير" Tag="Billing" Click="Navigation_Click" Margin="0,4" Padding="12" Background="Transparent" Foreground="White" BorderThickness="0"/>
+                    <Button Content="الصيدلية" Tag="Pharmacy" Click="Navigation_Click" Margin="0,4" Padding="12" Background="Transparent" Foreground="White" BorderThickness="0"/>
                 </StackPanel>
 
-                <Button DockPanel.Dock="Bottom" Content="تسجيل الخروج" Click="Logout_Click" Padding="12" Background="#8B2635" Foreground="White" BorderThickness="0"/>
+                <Button DockPanel.Dock="Bottom" Content="تسجيل ال��روج" Click="Logout_Click" Padding="12" Background="#8B2635" Foreground="White" BorderThickness="0"/>
             </DockPanel>
         </Border>
 
