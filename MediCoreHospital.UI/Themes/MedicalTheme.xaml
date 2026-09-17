@@ -1,30 +1,5 @@
-<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-
-    <SolidColorBrush x:Key="PrimaryDarkBrush" Color="#0D1B3A" />
-    <SolidColorBrush x:Key="PrimaryBlueBrush" Color="#0F4C81" />
-    <SolidColorBrush x:Key="PrimaryTealBrush" Color="#1EA7A1" />
-    <SolidColorBrush x:Key="PrimaryCyanBrush" Color="#63C7D8" />
-    <SolidColorBrush x:Key="AccentGreenBrush" Color="#2FBF71" />
-    <SolidColorBrush x:Key="AccentRedBrush" Color="#E14F5B" />
-    <SolidColorBrush x:Key="AccentAmberBrush" Color="#F7B267" />
-    <SolidColorBrush x:Key="SoftGrayBrush" Color="#F7F9FC" />
-    <SolidColorBrush x:Key="CardBrush" Color="#FFFFFF" />
-    <SolidColorBrush x:Key="BorderBrush" Color="#E5ECF4" />
-    <SolidColorBrush x:Key="TextDarkBrush" Color="#0F172A" />
-    <SolidColorBrush x:Key="TextMutedBrush" Color="#64748B" />
-
-    <Style x:Key="CardStyle" TargetType="Border">
-        <Setter Property="Background" Value="White" />
-        <Setter Property="CornerRadius" Value="18" />
-        <Setter Property="BorderBrush" Value="#E5ECF4" />
-        <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="Padding" Value="18" />
-        <Setter Property="Effect">
-            <Setter.Value>
-                <DropShadowEffect BlurRadius="12" ShadowDepth="2" Opacity="0.08" Color="#B8C7D9" />
-            </Setter.Value>
-        </Setter>
-    </Style>
-
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:converters="clr-namespace:MediCoreHospital.UI.Converters">
+    <SolidColorBrush x:Key="PrimaryDarkBrush" Color="#0D1B3A"/><SolidColorBrush x:Key="PrimaryBlueBrush" Color="#0F4C81"/><SolidColorBrush x:Key="PrimaryTealBrush" Color="#1EA7A1"/><SolidColorBrush x:Key="SoftGrayBrush" Color="#F7F9FC"/><SolidColorBrush x:Key="CardBrush" Color="#FFFFFF"/><SolidColorBrush x:Key="TextDarkBrush" Color="#0F172A"/><SolidColorBrush x:Key="TextMutedBrush" Color="#64748B"/>
+    <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    <Style x:Key="CardStyle" TargetType="Border"><Setter Property="Background" Value="White"/><Setter Property="CornerRadius" Value="18"/><Setter Property="BorderBrush" Value="#E5ECF4"/><Setter Property="BorderThickness" Value="1"/><Setter Property="Padding" Value="18"/></Style>
 </ResourceDictionary>

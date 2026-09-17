@@ -1,10 +1,10 @@
 using System.Data;
-using MediCoreHospital.Infrastructure.Data;
 using Microsoft.Data.SqlClient;
 
 namespace MediCoreHospital.Infrastructure.Services;
 
-public sealed partial class PatientService
+// Reserved for the audit decorator that will be added with the security module.
+internal static class PatientAuditSql
 {
-    // The partial declaration is intentionally kept separate from the service implementation for future audit integration.
+    public static void AddAuditParameters(SqlCommand command, int? userId, string operation) { }
 }
