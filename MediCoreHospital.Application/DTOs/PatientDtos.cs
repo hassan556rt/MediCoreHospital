@@ -11,6 +11,8 @@ public sealed class PatientDto
     public string Gender { get; init; } = string.Empty;
     public DateTime? DateOfBirth { get; init; }
     public string Phone { get; init; } = string.Empty;
+    public string Email { get; init; } = string.Empty;
+    public string Address { get; init; } = string.Empty;
     public string BloodType { get; init; } = string.Empty;
     public DateTime CreatedAt { get; init; }
 }
@@ -27,4 +29,9 @@ public sealed class CreatePatientRequest
     public string Phone { get; init; } = string.Empty;
     public string Email { get; init; } = string.Empty;
     public string Address { get; init; } = string.Empty;
+}
+
+public sealed class UpdatePatientRequest : CreatePatientRequest
+{
+    public int PatientId { get; init; }
 }
