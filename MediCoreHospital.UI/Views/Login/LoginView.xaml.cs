@@ -25,7 +25,7 @@ public partial class LoginView : UserControl
 
         try
         {
-            var app = Application.Current as App;
+            var app = global::System.Windows.Application.Current as App;
             var authenticationService = app?.Services.GetService<MediCoreHospital.Application.Contracts.IAuthenticationService>();
 
             if (authenticationService is null)
