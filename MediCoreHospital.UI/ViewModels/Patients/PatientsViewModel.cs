@@ -9,6 +9,7 @@ namespace MediCoreHospital.UI.ViewModels.Patients;
 public partial class PatientsViewModel : ObservableObject
 {
     private readonly IPatientService _patientService;
+
     [ObservableProperty] private string searchTerm = string.Empty;
     [ObservableProperty] private bool isLoading;
     [ObservableProperty] private string errorMessage = string.Empty;
@@ -24,27 +25,58 @@ public partial class PatientsViewModel : ObservableObject
     [ObservableProperty] private string bloodType = string.Empty;
     [ObservableProperty] private string email = string.Empty;
     [ObservableProperty] private string address = string.Empty;
+
     public ObservableCollection<PatientDto> Patients { get; } = new();
     public bool IsEditing => SelectedPatient is not null;
+
     public PatientsViewModel(IPatientService patientService) => _patientService = patientService;
 
     partial void OnSelectedPatientChanged(PatientDto? value)
     {
-        if (value is null) { ClearForm(); }
-        else { FirstName = value.FirstName; LastName = value.LastName; MedicalRecordNumber = value.MedicalRecordNumber; NationalId = value.NationalId; Gender = value.Gender; DateOfBirth = value.DateOfBirth; BloodType = value.BloodType; Phone = value.Phone; Email = value.Email; Address = value.Address; }
+        if (value is null)
+        {
+            ClearForm();
+        }
+        else
+        {
+            FirstName = value.FirstName;
+            LastName = value.LastName;
+            MedicalRecordNumber = value.MedicalRecordNumber;
+            NationalId = value.NationalId;
+            Gender = value.Gender;
+            DateOfBirth = value.DateOfBirth;
+            BloodType = value.BloodType;
+            Phone = value.Phone;
+            Email = value.Email;
+            Address = value.Address;
+        }
+
         OnPropertyChanged(nameof(IsEditing));
     }
 
-    public async Task LoadAsync(CancellationToken cancellationToken = default) => await ExecuteAsync(async () =>
+    public async Task LoadAsync(CancellationToken cancellationToken = default)
     {
-        var result = await _patientService.SearchAsync(SearchTerm, cancellationToken);
-        Patients.Clear(); foreach (var patient in result) Patients.Add(patient);
-    });
+        await ExecuteAsync(async () =>
+        {
+            var result = await _patientService.SearchAsync(SearchTerm, cancellationToken);
+            Patients.Clear();
+            foreach (var patient in result)
+            {
+                Patients.Add(patient);
+            }
+        });
+    }
 
     public async Task SaveAsync(CancellationToken cancellationToken = default)
     {
-        ErrorMessage = SuccessMessage = string.Empty;
-        if (!Validate()) return;
+        ErrorMessage = string.Empty;
+        SuccessMessage = string.Empty;
+
+        if (!Validate())
+        {
+            return;
+        }
+
         await ExecuteAsync(async () =>
         {
             if (SelectedPatient is null)
@@ -54,36 +86,133 @@ public partial class PatientsViewModel : ObservableObject
             }
             else
             {
-                await _patientService.UpdateAsync(new UpdatePatientRequest { PatientId = SelectedPatient.PatientId, MedicalRecordNumber = MedicalRecordNumber, NationalId = NationalId, FirstName = FirstName, LastName = LastName, Gender = Gender, DateOfBirth = DateOfBirth, BloodType = BloodType, Phone = Phone, Email = Email, Address = Address }, cancellationToken);
+                await _patientService.UpdateAsync(new UpdatePatientRequest
+                {
+                    PatientId = SelectedPatient.PatientId,
+                    MedicalRecordNumber = MedicalRecordNumber,
+                    NationalId = NationalId,
+                    FirstName = FirstName,
+                    LastName = LastName,
+                    Gender = Gender,
+                    DateOfBirth = DateOfBirth,
+                    BloodType = BloodType,
+                    Phone = Phone,
+                    Email = Email,
+                    Address = Address
+                }, cancellationToken);
                 SuccessMessage = "تم تحديث بيانات المريض بنجاح.";
             }
-            ClearForm(); await LoadAsync(cancellationToken);
+
+            SelectedPatient = null;
+            await LoadAsync(cancellationToken);
         });
     }
 
     public async Task DeleteAsync(CancellationToken cancellationToken = default)
     {
-        if (SelectedPatient is null) { ErrorMessage = "يرجى اختيار مريض للحذف."; return; }
-        await ExecuteAsync(async () => { await _patientService.DeleteAsync(SelectedPatient.PatientId, cancellationToken); SelectedPatient = null; SuccessMessage = "تم حذف المريض بنجاح."; await LoadAsync(cancellationToken); });
+        if (SelectedPatient is null)
+        {
+            ErrorMessage = "يرجى اختيار مريض للحذف.";
+            return;
+        }
+
+        var patientId = SelectedPatient.PatientId;
+        await ExecuteAsync(async () =>
+        {
+            await _patientService.DeleteAsync(patientId, cancellationToken);
+            SelectedPatient = null;
+            SuccessMessage = "تم حذف المريض بنجاح.";
+            await LoadAsync(cancellationToken);
+        });
     }
 
-    public void NewPatient() { SelectedPatient = null; ClearForm(); ErrorMessage = SuccessMessage = string.Empty; }
-    private CreatePatientRequest ToCreateRequest() => new() { MedicalRecordNumber = MedicalRecordNumber, NationalId = NationalId, FirstName = FirstName, LastName = LastName, Gender = Gender, DateOfBirth = DateOfBirth, BloodType = BloodType, Phone = Phone, Email = Email, Address = Address };
+    public void NewPatient()
+    {
+        SelectedPatient = null;
+        ClearForm();
+        ErrorMessage = string.Empty;
+        SuccessMessage = string.Empty;
+    }
+
+    private CreatePatientRequest ToCreateRequest() => new()
+    {
+        MedicalRecordNumber = MedicalRecordNumber,
+        NationalId = NationalId,
+        FirstName = FirstName,
+        LastName = LastName,
+        Gender = Gender,
+        DateOfBirth = DateOfBirth,
+        BloodType = BloodType,
+        Phone = Phone,
+        Email = Email,
+        Address = Address
+    };
+
     private bool Validate()
     {
-        if (string.IsNullOrWhiteSpace(FirstName)) { ErrorMessage = "يرجى إدخال الاسم الأول للمريض."; return false; }
-        if (string.IsNullOrWhiteSpace(LastName)) { ErrorMessage = "يرجى إدخال اسم العائلة للمريض."; return false; }
-        if (string.IsNullOrWhiteSpace(MedicalRecordNumber)) { ErrorMessage = "يرجى إدخال رقم الملف الطبي."; return false; }
-        if (DateOfBirth > DateTime.Today) { ErrorMessage = "تاريخ الميلاد لا يمكن أن يكون في المستقبل."; return false; }
+        if (string.IsNullOrWhiteSpace(FirstName))
+        {
+            ErrorMessage = "يرجى إدخال الاسم الأول للمريض.";
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(LastName))
+        {
+            ErrorMessage = "يرجى إدخال اسم العائلة للمريض.";
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(MedicalRecordNumber))
+        {
+            ErrorMessage = "يرجى إدخال رقم الملف الطبي.";
+            return false;
+        }
+
+        if (DateOfBirth > DateTime.Today)
+        {
+            ErrorMessage = "تاريخ الميلاد لا يمكن أن يكون في المستقبل.";
+            return false;
+        }
+
         return true;
     }
-    private void ClearForm() { FirstName = LastName = MedicalRecordNumber = Phone = NationalId = Gender = BloodType = Email = Address = string.Empty; DateOfBirth = null; }
+
+    private void ClearForm()
+    {
+        FirstName = string.Empty;
+        LastName = string.Empty;
+        MedicalRecordNumber = string.Empty;
+        Phone = string.Empty;
+        NationalId = string.Empty;
+        Gender = string.Empty;
+        BloodType = string.Empty;
+        Email = string.Empty;
+        Address = string.Empty;
+        DateOfBirth = null;
+    }
+
     private async Task ExecuteAsync(Func<Task> operation)
     {
-        try { IsLoading = true; ErrorMessage = string.Empty; await operation(); }
-        catch (OperationCanceledException) { }
-        catch (SqlException) { ErrorMessage = "تعذر تنفيذ العملية. يرجى التحقق من قاعدة البيانات أو رقم الملف الطبي."; }
-        catch (Exception) { ErrorMessage = "حدث خطأ غير متوقع أثناء تنفيذ العملية."; }
-        finally { IsLoading = false; }
+        try
+        {
+            IsLoading = true;
+            ErrorMessage = string.Empty;
+            await operation();
+        }
+        catch (OperationCanceledException)
+        {
+        }
+        catch (SqlException)
+        {
+            ErrorMessage = "تعذر تنفيذ العملية. يرجى التحقق من قاعدة البيانات أو رقم الملف الطبي.";
+        }
+        catch (Exception)
+        {
+            ErrorMessage = "حدث خطأ غير متوقع أثناء تنفيذ العملية.";
+        }
+        finally
+        {
+            IsLoading = false;
+        }
     }
 }
