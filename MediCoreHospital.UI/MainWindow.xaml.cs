@@ -1,4 +1,5 @@
 using System.Windows;
+using MediCoreHospital.Application.DTOs;
 using MediCoreHospital.UI.Views.Appointments;
 using MediCoreHospital.UI.Views.Billing;
 using MediCoreHospital.UI.Views.Clinical;
@@ -12,9 +13,12 @@ namespace MediCoreHospital.UI;
 
 public partial class MainWindow : Window
 {
-    public MainWindow()
+    private readonly LoginResult _currentUser;
+    public MainWindow(LoginResult currentUser)
     {
         InitializeComponent();
+        _currentUser = currentUser;
+        UserText.Text = $"{currentUser.FullName} · {currentUser.RoleName}";
         ShowDashboard();
     }
 
@@ -35,12 +39,21 @@ public partial class MainWindow : Window
         }
     }
 
-    private void ShowDashboard() => ContentHost.Content = new DashboardView(((App)global::System.Windows.Application.Current).Services.GetRequiredService<ViewModels.Dashboard.DashboardViewModel>());
-    private void ShowPatients() => ContentHost.Content = new PatientsView(((App)global::System.Windows.Application.Current).Services.GetRequiredService<ViewModels.Patients.PatientsViewModel>());
-    private void ShowClinical() => ContentHost.Content = new ClinicalDirectoryView(((App)global::System.Windows.Application.Current).Services.GetRequiredService<ViewModels.Clinical.ClinicalDirectoryViewModel>());
-    private void ShowAppointments() => ContentHost.Content = new AppointmentsView(((App)global::System.Windows.Application.Current).Services.GetRequiredService<ViewModels.Appointments.AppointmentsViewModel>());
-    private void ShowInpatient() => ContentHost.Content = new InpatientView(((App)global::System.Windows.Application.Current).Services.GetRequiredService<ViewModels.Inpatient.InpatientViewModel>());
-    private void ShowBilling() => ContentHost.Content = new BillingView(((App)global::System.Windows.Application.Current).Services.GetRequiredService<ViewModels.Billing.BillingViewModel>());
-    private void ShowPharmacy() => ContentHost.Content = new PharmacyView(((App)global::System.Windows.Application.Current).Services.GetRequiredService<ViewModels.Pharmacy.PharmacyViewModel>());
-    private void Logout_Click(object sender, RoutedEventArgs e) => Close();
+    private void ShowDashboard() => ContentHost.Content = new DashboardView(AppServices.GetRequiredService<DashboardViewModel>());
+    private void ShowPatients() => ContentHost.Content = new PatientsView(AppServices.GetRequiredService<PatientsViewModel>());
+    private void ShowClinical() => ContentHost.Content = new ClinicalDirectoryView(AppServices.GetRequiredService<ClinicalDirectoryViewModel>());
+    private void ShowAppointments() => ContentHost.Content = new AppointmentsView(AppServices.GetRequiredService<AppointmentsViewModel>());
+    private void ShowInpatient() => ContentHost.Content = new InpatientView(AppServices.GetRequiredService<InpatientViewModel>());
+    private void ShowBilling() => ContentHost.Content = new BillingView(AppServices.GetRequiredService<BillingViewModel>());
+    private void ShowPharmacy() => ContentHost.Content = new PharmacyView(AppServices.GetRequiredService<PharmacyViewModel>());
+
+    private IServiceProvider AppServices => ((App)Application.Current).Services;
+
+    private void Logout_Click(object sender, RoutedEventArgs e)
+    {
+        var login = AppServices.GetRequiredService<MediCoreHospital.UI.Views.Login.LoginWindow>();
+        Application.Current.MainWindow = login;
+        login.Show();
+        Close();
+    }
 }

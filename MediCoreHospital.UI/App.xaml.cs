@@ -1,3 +1,4 @@
+using System.Windows;
 using MediCoreHospital.Application.Contracts;
 using MediCoreHospital.Infrastructure.Configuration;
 using MediCoreHospital.Infrastructure.Data;
@@ -9,17 +10,18 @@ using MediCoreHospital.UI.ViewModels.Dashboard;
 using MediCoreHospital.UI.ViewModels.Inpatient;
 using MediCoreHospital.UI.ViewModels.Patients;
 using MediCoreHospital.UI.ViewModels.Pharmacy;
+using MediCoreHospital.UI.Views.Login;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace MediCoreHospital.UI;
 
-public partial class App : System.Windows.Application
+public partial class App : Application
 {
     public IServiceProvider Services { get; private set; } = null!;
 
-    private void Application_Startup(object sender, System.Windows.StartupEventArgs e)
+    private void Application_Startup(object sender, StartupEventArgs e)
     {
         var configuration = new ConfigurationBuilder()
             .SetBasePath(AppContext.BaseDirectory)
@@ -32,14 +34,14 @@ public partial class App : System.Windows.Application
         services.AddSingleton<ISqlConnectionFactory, SqlConnectionFactory>();
         services.AddLogging(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Information));
 
-        services.AddScoped<IAuthenticationService, AuthenticationService>();
-        services.AddScoped<IDashboardService, DashboardService>();
-        services.AddScoped<IPatientService, PatientService>();
-        services.AddScoped<IClinicalDirectoryService, ClinicalDirectoryService>();
-        services.AddScoped<IAppointmentService, AppointmentService>();
-        services.AddScoped<IInpatientService, InpatientService>();
-        services.AddScoped<IInvoiceService, InvoiceService>();
-        services.AddScoped<IPharmacyService, PharmacyService>();
+        services.AddSingleton<IAuthenticationService, AuthenticationService>();
+        services.AddSingleton<IDashboardService, DashboardService>();
+        services.AddSingleton<IPatientService, PatientService>();
+        services.AddSingleton<IClinicalDirectoryService, ClinicalDirectoryService>();
+        services.AddSingleton<IAppointmentService, AppointmentService>();
+        services.AddSingleton<IInpatientService, InpatientService>();
+        services.AddSingleton<IInvoiceService, InvoiceService>();
+        services.AddSingleton<IPharmacyService, PharmacyService>();
 
         services.AddTransient<DashboardViewModel>();
         services.AddTransient<PatientsViewModel>();
@@ -48,9 +50,11 @@ public partial class App : System.Windows.Application
         services.AddTransient<InpatientViewModel>();
         services.AddTransient<BillingViewModel>();
         services.AddTransient<PharmacyViewModel>();
+        services.AddTransient<LoginWindow>();
         services.AddTransient<MainWindow>();
 
         Services = services.BuildServiceProvider();
-        Services.GetRequiredService<MainWindow>().Show();
+        MainWindow = Services.GetRequiredService<LoginWindow>();
+        MainWindow.Show();
     }
 }
