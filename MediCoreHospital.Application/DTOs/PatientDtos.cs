@@ -17,7 +17,7 @@ public sealed class PatientDto
     public DateTime CreatedAt { get; init; }
 }
 
-public sealed class CreatePatientRequest
+public class CreatePatientRequest
 {
     public string MedicalRecordNumber { get; init; } = string.Empty;
     public string NationalId { get; init; } = string.Empty;
