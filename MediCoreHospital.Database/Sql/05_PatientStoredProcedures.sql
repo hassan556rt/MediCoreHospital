@@ -3,9 +3,7 @@ CREATE OR ALTER PROCEDURE Patient_Search
 AS
 BEGIN
     SET NOCOUNT ON;
-
-    SELECT TOP (200)
-        PatientId, MedicalRecordNumber, NationalId, FirstName, LastName,
+    SELECT TOP (200) PatientId, MedicalRecordNumber, NationalId, FirstName, LastName,
         Gender, DateOfBirth, BloodType, Phone, Email, Address, CreatedAt
     FROM Patients
     WHERE IsDeleted = 0
@@ -29,31 +27,21 @@ AS
 BEGIN
     SET NOCOUNT ON;
     SET XACT_ABORT ON;
-    BEGIN TRANSACTION;
-    BEGIN TRY
-        IF EXISTS (SELECT 1 FROM Patients WHERE MedicalRecordNumber = @MedicalRecordNumber AND IsDeleted = 0)
-            THROW 51001, 'Medical record number already exists.', 1;
-        INSERT INTO Patients (MedicalRecordNumber, NationalId, FirstName, LastName, Gender, DateOfBirth, BloodType, Phone, Email, Address)
-        VALUES (@MedicalRecordNumber, @NationalId, @FirstName, @LastName, @Gender, @DateOfBirth, @BloodType, @Phone, @Email, @Address);
-        SELECT CONVERT(INT, SCOPE_IDENTITY());
-        COMMIT TRANSACTION;
-    END TRY
-    BEGIN CATCH
-        IF XACT_STATE() <> 0 ROLLBACK TRANSACTION;
-        THROW;
-    END CATCH;
+    IF EXISTS (SELECT 1 FROM Patients WHERE MedicalRecordNumber = @MedicalRecordNumber AND IsDeleted = 0)
+        THROW 51001, 'Medical record number already exists.', 1;
+    INSERT INTO Patients (MedicalRecordNumber, NationalId, FirstName, LastName, Gender, DateOfBirth, BloodType, Phone, Email, Address)
+    VALUES (@MedicalRecordNumber, @NationalId, @FirstName, @LastName, @Gender, @DateOfBirth, @BloodType, @Phone, @Email, @Address);
+    SELECT CONVERT(INT, SCOPE_IDENTITY());
 END;
 GO
 
-CREATE OR ALTER PROCEDURE Patient_GetById
-    @PatientId INT
+CREATE OR ALTER PROCEDURE Patient_GetById @PatientId INT
 AS
 BEGIN
     SET NOCOUNT ON;
     SELECT PatientId, MedicalRecordNumber, NationalId, FirstName, LastName, Gender, DateOfBirth,
         BloodType, Phone, Email, Address, CreatedAt
-    FROM Patients
-    WHERE PatientId = @PatientId AND IsDeleted = 0;
+    FROM Patients WHERE PatientId = @PatientId AND IsDeleted = 0;
 END;
 GO
 
@@ -68,8 +56,7 @@ BEGIN
     SET XACT_ABORT ON;
     IF EXISTS (SELECT 1 FROM Patients WHERE MedicalRecordNumber = @MedicalRecordNumber AND PatientId <> @PatientId AND IsDeleted = 0)
         THROW 51001, 'Medical record number already exists.', 1;
-    UPDATE Patients
-    SET MedicalRecordNumber=@MedicalRecordNumber, NationalId=@NationalId, FirstName=@FirstName,
+    UPDATE Patients SET MedicalRecordNumber=@MedicalRecordNumber, NationalId=@NationalId, FirstName=@FirstName,
         LastName=@LastName, Gender=@Gender, DateOfBirth=@DateOfBirth, BloodType=@BloodType,
         Phone=@Phone, Email=@Email, Address=@Address, UpdatedAt=GETDATE()
     WHERE PatientId=@PatientId AND IsDeleted=0;
@@ -77,13 +64,11 @@ BEGIN
 END;
 GO
 
-CREATE OR ALTER PROCEDURE Patient_Delete
-    @PatientId INT
+CREATE OR ALTER PROCEDURE Patient_Delete @PatientId INT
 AS
 BEGIN
     SET NOCOUNT ON;
-    UPDATE Patients SET IsDeleted=1, UpdatedAt=GETDATE()
-    WHERE PatientId=@PatientId AND IsDeleted=0;
+    UPDATE Patients SET IsDeleted=1, UpdatedAt=GETDATE() WHERE PatientId=@PatientId AND IsDeleted=0;
     IF @@ROWCOUNT = 0 THROW 51002, 'Patient was not found.', 1;
 END;
 GO
